@@ -2,7 +2,7 @@ import * as packageJson from '../../../package.json';
 
 const BASE_URL  = 'http://localhost:8090';
 export const environment = {
-  production: false,
+  production: true,
   ENDPOINT_PERSONAL: `${BASE_URL}/Usuarios`,
   RECAPTCHA_SITE_KEY: '6LfIIQ8sAAAAALnFMRoAtfbOaD2XUE9dKpj3VtOk',
   YOUTUBE_API: 'AIzaSyCHxlRUXgQXNjDoGEP0yDDjGyh9Tr_iLgU',
