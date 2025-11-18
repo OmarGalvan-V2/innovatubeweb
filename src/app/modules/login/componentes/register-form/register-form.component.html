@@ -96,13 +96,13 @@
         styleClass="w-full"
       />
     </div>
-    <app-captcha #captcha (tokenGenerated)="generarToken($event)"></app-captcha>
+    <app-captcha #captcha (tokenGenerado)="generarToken($event)"></app-captcha>
     <div class="pt-4">
       <p-button
         label="Crear Cuenta"
         styleClass="w-full !text-white"
         [style]="{'background-color': 'var(--color-primary)', 'border': 'none', 'height': '2.5rem'}"
-        (onClick)="captcha.executeRecaptcha('register')"
+        (onClick)="registrarUsuario()"
       />
     </div>
   </form>

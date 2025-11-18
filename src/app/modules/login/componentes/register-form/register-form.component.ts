@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -9,6 +9,7 @@ import { Usuario } from '../../../../core/interfaces/usuario.interface';
 import { AuthService } from '../../../../core/services/Auth/auth.service';
 import { NotificationService } from '../../../../shared/helpers/notification.service';
 import { CaptchaComponent } from '../../../../shared/captcha/captcha.component';
+
 
 @Component({
   selector: 'componente-register-form',
@@ -20,12 +21,13 @@ import { CaptchaComponent } from '../../../../shared/captcha/captcha.component';
     DatePickerModule,
     ButtonModule,
     InputTextModule,
-    CaptchaComponent
+    CaptchaComponent,
   ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.css'
 })
 export class RegisterFormComponent {
+  @ViewChild('captcha') captcha!: CaptchaComponent;
 
   private _formulario = inject(FormBuilder);
   private _autenticadorService = inject(AuthService);
@@ -64,9 +66,39 @@ export class RegisterFormComponent {
     return true;
   }
 
+  public generarToken(token: string): void {
+    if (!this.esFormularioValido()) return;
+    
+    if (!this.validarEdadMinima()) {
+      this._notificiacionService.error('Debes ser mayor de 18 años para registrarte');
+      return;
+    }
+    
+    const usuario = this.mapearUsuario();
+    usuario.recaptchaToken = token;
+    this.registrar(usuario);
+  }
+
   private contrasenasCoinciden(): boolean {
-    const { password, confirmPassword } = this.usuarioForm.value;
+    const { password, confirmPassword }: { password: string; confirmPassword: string } = this.usuarioForm.value;
     return password === confirmPassword;
+  }
+
+  private validarEdadMinima(): boolean {
+    const fechaNacimiento: Date = this.usuarioForm.get('fechaNacimiento')?.value;
+    if (!fechaNacimiento) return false;
+    
+    const hoy: Date = new Date();
+    const nacimiento: Date = new Date(fechaNacimiento);
+    const edad: number = hoy.getFullYear() - nacimiento.getFullYear();
+    const mesActual: number = hoy.getMonth();
+    const mesNacimiento: number = nacimiento.getMonth();
+    
+    if (mesActual < mesNacimiento || (mesActual === mesNacimiento && hoy.getDate() < nacimiento.getDate())) {
+      return edad - 1 >= 18;
+    }
+    
+    return edad >= 18;
   }
 
   private mostrarErrorFormulario(): void {
@@ -87,7 +119,7 @@ export class RegisterFormComponent {
 
 
   private mapearUsuario(): Usuario {
-    const { confirmPassword, fechaNacimiento, ...data } = this.usuarioForm.value;
+    const { confirmPassword, fechaNacimiento, ...data }: any = this.usuarioForm.value;
 
     return {
       ...data,
@@ -117,19 +149,23 @@ export class RegisterFormComponent {
     this.usuarioForm.reset();
   }
 
+  public registrarUsuario(): void {
+    if (!this.esFormularioValido()) return;
+    
+    if (!this.validarEdadMinima()) {
+      this._notificiacionService.error('Debes ser mayor de 18 años para registrarte');
+      return;
+    }
+
+    this.captcha.ejecutarRecaptcha();
+  }
+
   private errorRegistro(error: any): void {
-    const mensaje =
+    const mensaje: string =
       error.error?.errores?.[0] ||
       error.error?.mensaje ||
       'Error al registrar usuario';
 
     this._notificiacionService.error(mensaje);
-  }
-
-  public generarToken(token: string): void {
-    if (!this.esFormularioValido()) return;
-    const usuario = this.mapearUsuario();
-    usuario.recaptchaToken = token;
-    this.registrar(usuario);
   }
 }

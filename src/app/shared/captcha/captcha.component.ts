@@ -1,19 +1,62 @@
-import { Component, inject, Output, EventEmitter } from '@angular/core';
-import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { environment } from '../../enviroments/enviroments';
+
+declare var grecaptcha: any;
 
 @Component({
   selector: 'app-captcha',
   imports: [],
   templateUrl: './captcha.component.html'
 })
-export class CaptchaComponent {
-  @Output() tokenGenerated = new EventEmitter<string>();
+export class CaptchaComponent implements OnDestroy {
+  @Output() tokenGenerado: EventEmitter<string> = new EventEmitter<string>();
   
-  private _recaptchaV3Service : ReCaptchaV3Service = inject(ReCaptchaV3Service);
+  private claveSitio: string = environment.RECAPTCHA_SITE_KEY;
+  private scriptElement: HTMLScriptElement | null = null;
 
-  public executeRecaptcha(action: string = 'submit'): void {
-    this._recaptchaV3Service.execute(action).subscribe((token: string) => {
-      this.tokenGenerated.emit(token);
+  ngOnDestroy(): void {
+    this.limpiarRecaptcha();
+  }
+
+  private limpiarRecaptcha(): void {
+    if (this.scriptElement) {
+      document.head.removeChild(this.scriptElement);
+      this.scriptElement = null;
+    }
+    
+    // Remover el badge de reCAPTCHA
+    const badge = document.querySelector('.grecaptcha-badge');
+    if (badge) {
+      badge.remove();
+    }
+  }
+
+  public ejecutarRecaptcha(): void {
+    if (typeof grecaptcha !== 'undefined') {
+      this.ejecutarRecaptchaInterno();
+    } else {
+      this.cargarScriptRecaptcha().then(() => {
+        this.ejecutarRecaptchaInterno();
+      });
+    }
+  }
+
+  private cargarScriptRecaptcha(): Promise<void> {
+    return new Promise((resolve) => {
+      this.scriptElement = document.createElement('script');
+      this.scriptElement.src = `https://www.google.com/recaptcha/api.js?render=${this.claveSitio}`;
+      this.scriptElement.async = true;
+      this.scriptElement.defer = true;
+      this.scriptElement.onload = () => resolve();
+      document.head.appendChild(this.scriptElement);
+    });
+  }
+
+  private ejecutarRecaptchaInterno(): void {
+    grecaptcha.ready(() => {
+      grecaptcha.execute(this.claveSitio, { action: 'submit' }).then((token: string) => {
+        this.tokenGenerado.emit(token);
+      });
     });
   }
 }
