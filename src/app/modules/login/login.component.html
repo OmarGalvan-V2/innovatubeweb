@@ -1,0 +1,35 @@
+<div class="min-h-screen bg-background flex flex-col">
+  <app-header></app-header>
+  
+  <main class="flex-1 flex justify-center items-center flex-col p-4 sm:p-6">
+    <div class="flex flex-col justify-center mb-6">
+        <h1 class="text-primary text-4xl font-bold text-center mb-2">InnovaTube</h1>
+        <h1 class="text-gray-400/65 text-2xl text-center mb-4">Descubre y guarda tus videos favoritos</h1>
+    </div>
+    
+    <div class="bg-secondary p-8 rounded-lg shadow-lg w-[420px] mb-5">
+        <div class="flex mb-6 bg-secondary-light rounded-lg p-1">
+            <button 
+                (click)="botonIniciarSesion()" 
+                [class]="seleccionButton ? 'flex-1 py-2 px-4 rounded-md bg-primary text-white transition-all' : 'flex-1 py-2 px-4 rounded-md text-gray-400 hover:text-white transition-all'"
+            >
+                Iniciar Sesión
+            </button>
+            <button 
+                (click)="botonRegistrar()" 
+                [class]="!seleccionButton ? 'flex-1 py-2 px-4 rounded-md bg-primary text-white transition-all' : 'flex-1 py-2 px-4 rounded-md text-gray-400 hover:text-white transition-all'"
+            >
+                Registrarse
+            </button>
+        </div>
+        
+        @if (seleccionButton) {
+            <componente-login-form></componente-login-form>
+        } @else {
+            <componente-register-form></componente-register-form>
+        }
+    </div>
+  </main>
+  
+  <app-footer></app-footer>
+</div>

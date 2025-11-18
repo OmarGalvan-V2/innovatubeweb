@@ -1,0 +1,109 @@
+<div>
+  <form [formGroup]="usuarioForm" class="space-y-4">
+    <div class="space-y-3">
+      <div>
+        <label class="block text-white text-sm font-medium mb-2">Usuario</label>
+        <input
+          formControlName="usuario"
+          type="text"
+          placeholder="Ingresa tu nombre de usuario"
+          class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+        />
+      </div>
+      <div>
+        <label class="block text-white text-sm font-medium mb-2"
+          >Correo Electrónico</label
+        >
+        <input
+          formControlName="correo"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+        />
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <div>
+        <label class="block text-white text-sm font-medium mb-2">Nombre</label>
+        <input
+          formControlName="nombre"
+          type="text"
+          placeholder="Tu nombre"
+          class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+        />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-white text-sm font-medium mb-2"
+            >Apellido Paterno</label
+          >
+          <input
+            formControlName="apellidoPaterno"
+            type="text"
+            placeholder="Apellido paterno"
+            class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+          />
+        </div>
+        <div>
+          <label class="block text-white text-sm font-medium mb-2"
+            >Apellido Materno</label
+          >
+          <input
+            formControlName="apellidoMaterno"
+            type="text"
+            placeholder="Apellido materno"
+            class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <div>
+        <label class="block text-white text-sm font-medium mb-2"
+          >Contraseña</label
+        >
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="Mínimo 8 caracteres"
+          class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+        />
+      </div>
+      <div>
+        <label class="block text-white text-sm font-medium mb-2"
+          >Confirmar Contraseña</label
+        >
+        <input
+          formControlName="confirmPassword"
+          type="password"
+          placeholder="Repite tu contraseña"
+          class="w-full p-3 rounded-md bg-background text-white border border-gray-600 focus:border-primary focus:outline-none transition-colors"
+        />
+      </div>
+    </div>
+    <div class="flex flex-col">
+      <label class="block text-white text-sm font-medium mb-2"
+        >Fecha de Nacimiento</label
+      >
+      <p-datepicker
+        formControlName="fechaNacimiento"
+        [showIcon]="false"
+        dateFormat="dd/mm/yy"
+        placeholder="Selecciona tu fecha de nacimiento"
+        [readonlyInput]="true"
+        styleClass="w-full"
+      />
+    </div>
+    <app-captcha #captcha (tokenGenerated)="generarToken($event)"></app-captcha>
+    <div class="pt-4">
+      <p-button
+        label="Crear Cuenta"
+        styleClass="w-full !text-white"
+        [style]="{'background-color': 'var(--color-primary)', 'border': 'none', 'height': '2.5rem'}"
+        (onClick)="captcha.executeRecaptcha('register')"
+      />
+    </div>
+  </form>
+</div>

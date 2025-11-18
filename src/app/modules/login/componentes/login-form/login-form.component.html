@@ -1,0 +1,34 @@
+<div>
+  <label class="block text-white text-sm font-medium mb-2"
+    >Email o Usuario</label
+  >
+  <input
+    type="text"
+    [(ngModel)]="correoOUsuario"
+    pInputText 
+    placeholder="Ingresa tu email o Usuario"
+    class="w-full p-3 rounded-md bg-background text-white border border-gray-600 mb-4"
+  />
+</div>
+<div class="mb-5">
+  <label class="block text-white text-sm font-medium mb-2">Contraseña</label>
+  <input
+    type="password"
+    [(ngModel)]="password"
+    pInputText 
+    placeholder="Ingresa tu contraseña"
+    class="w-full p-3 rounded-md bg-background text-white border border-gray-600"
+  />
+</div>
+<div class="">
+  <p-button
+    label="Iniciar Sesión"
+    styleClass="w-full !text-white"
+    [style]="{
+      'background-color': 'var(--color-primary)',
+      border: 'none',
+      height: '2.5rem'
+    }"
+    (onClick)="validarDatos()"
+  />
+</div>

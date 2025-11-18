@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --color-background: #0f0f0f;
+  --color-foreground: #ffffff;
+  --color-primary: #ef4444;
+  --color-primary-light: #f87171;
+  --color-secondary: #1e1e1e;
+  --color-secondary-light: #2d2d2d;
+  --color-accent: #3b82f6;
+  --radius: 0.5rem;
+}
+
+body {
+  @apply bg-background text-foreground;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-light;
+}
+
